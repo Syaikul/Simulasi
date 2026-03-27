@@ -15,16 +15,53 @@
     .logo { width: 110px; height: 110px; border-radius: 50%; background: #f97316; color: white; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: bold; margin: 0 auto 20px; border: 6px solid #fff; box-shadow: 0 0 0 4px #f97316; }
     .subtitle { font-size: 18px; color: #666; line-height: 1.5; }
     .highlight { font-size: 24px; font-weight: 800; color: #ef6c00; margin-top: 10px; }
+
     .card { background: #f7f7f7; margin: 18px 20px; border-radius: 18px; padding: 24px 20px; }
     .input-title { text-align: center; font-size: 18px; color: #555; margin-bottom: 18px; }
     .input-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
     .rp { font-size: 24px; color: #555; }
-    .money-input { border: none; outline: none; background: transparent; font-size: 40px; font-weight: 700; text-align: center; width: 100%; max-width: 240px; color: #111; }
+    .money-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 40px;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
+      max-width: 240px;
+      color: #111;
+    }
     .clear-btn { background: none; border: none; cursor: pointer; color: #aaa; font-size: 30px; }
-    .rate-box { margin: 18px 20px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 18px; padding: 18px; }
-    .rate-box label { display: block; font-size: 14px; color: #9a3412; margin-bottom: 8px; font-weight: 700; }
-    .rate-box input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #fdba74; font-size: 16px; }
-    .result-card { background: #fff; margin: 18px 20px 30px; border: 1px solid #ddd; border-radius: 18px; padding: 24px 20px; }
+
+    .rate-box {
+      margin: 18px 20px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .rate-box label {
+      display: block;
+      font-size: 14px;
+      color: #9a3412;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .rate-box input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #fdba74;
+      font-size: 16px;
+    }
+
+    .result-card {
+      background: #fff;
+      margin: 18px 20px 30px;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 24px 20px;
+    }
     .result-title { text-align: center; font-size: 24px; font-weight: 800; margin-bottom: 14px; }
     .result-desc { font-size: 15px; color: #777; line-height: 1.5; margin-bottom: 18px; }
     .divider { height: 1px; background: #e5e5e5; margin: 16px 0; }
@@ -33,7 +70,16 @@
     .row-right { text-align: right; }
     .profit { font-size: 24px; font-weight: 800; color: #16a34a; }
     .tax { font-size: 15px; color: #999; margin-top: 8px; }
-    .info-box { margin: 0 20px 30px; padding: 16px; background: #f9fafb; border-radius: 14px; font-size: 14px; color: #555; line-height: 1.6; }
+
+    .info-box {
+      margin: 0 20px 30px;
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 14px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -66,7 +112,7 @@
     <div class="result-card">
       <div class="result-title">Pendapatan Bunga</div>
       <div class="result-desc">
-        Bunga dihitung dari suku bunga tahunan dan dibagi per hari. Pajak bunga 20% hanya berlaku jika saldo tabungan melebihi Rp 7.500.000.
+        Bunga dihitung dari suku bunga tahunan. Pajak bunga 20% hanya berlaku jika saldo tabungan melebihi Rp 7.500.000.
       </div>
 
       <div class="divider"></div>
@@ -82,9 +128,19 @@
       <div class="divider"></div>
 
       <div class="row">
+        <div class="row-left">1 Bulan</div>
+        <div class="row-right">
+          <div class="profit" id="monthlyProfit">+Rp 15.625</div>
+          <div class="tax" id="monthlyTax">Pajak Bunga: -Rp 0</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
         <div class="row-left">1 Tahun</div>
         <div class="row-right">
-          <div class="profit" id="yearlyProfit">+Rp 150.000</div>
+          <div class="profit" id="yearlyProfit">+Rp 187.500</div>
           <div class="tax" id="yearlyTax">Pajak Bunga: -Rp 0</div>
         </div>
       </div>
@@ -93,6 +149,7 @@
     <div class="info-box">
       <strong>Aturan simulasi:</strong><br>
       • Bunga harian = (saldo × bunga tahunan) ÷ 365<br>
+      • Bunga bulanan = (saldo × bunga tahunan) ÷ 12<br>
       • Bunga tahunan = saldo × bunga tahunan<br>
       • Jika saldo <strong>lebih dari Rp 7.500.000</strong>, bunga dikenakan <strong>pajak 20%</strong>
     </div>
@@ -102,8 +159,13 @@
     const amountInput = document.getElementById('amountInput');
     const rateInput = document.getElementById('rateInput');
     const displayRate = document.getElementById('displayRate');
+
     const dailyProfit = document.getElementById('dailyProfit');
     const dailyTax = document.getElementById('dailyTax');
+
+    const monthlyProfit = document.getElementById('monthlyProfit');
+    const monthlyTax = document.getElementById('monthlyTax');
+
     const yearlyProfit = document.getElementById('yearlyProfit');
     const yearlyTax = document.getElementById('yearlyTax');
 
@@ -134,17 +196,24 @@
       displayRate.textContent = rate.toString().replace('.', ',');
 
       const yearlyGross = amount * (rate / 100);
+      const monthlyGross = yearlyGross / 12;
       const dailyGross = yearlyGross / 365;
 
       const taxable = amount > TAX_THRESHOLD;
+
       const yearlyTaxValue = taxable ? yearlyGross * TAX_RATE : 0;
+      const monthlyTaxValue = taxable ? monthlyGross * TAX_RATE : 0;
       const dailyTaxValue = taxable ? dailyGross * TAX_RATE : 0;
 
       const yearlyNet = yearlyGross - yearlyTaxValue;
+      const monthlyNet = monthlyGross - monthlyTaxValue;
       const dailyNet = dailyGross - dailyTaxValue;
 
       dailyProfit.textContent = '+Rp ' + formatNumber(dailyNet);
       dailyTax.textContent = 'Pajak Bunga: -Rp ' + formatNumber(dailyTaxValue);
+
+      monthlyProfit.textContent = '+Rp ' + formatNumber(monthlyNet);
+      monthlyTax.textContent = 'Pajak Bunga: -Rp ' + formatNumber(monthlyTaxValue);
 
       yearlyProfit.textContent = '+Rp ' + formatNumber(yearlyNet);
       yearlyTax.textContent = 'Pajak Bunga: -Rp ' + formatNumber(yearlyTaxValue);
